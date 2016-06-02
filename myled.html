@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Getting data from a sensor</title>
+	<meta name="description" content="Simple Chat Room">
+	<meta name="author" content="Tomomi Imura  @girlie_mac">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+</head>
+
+<body>
+	<header>
+		<h1>Control LED from Web Interface</h1>
+		<h2>Publishing from web to control a LED</h2>
+	</header>
+
+	
+		<button>Disco on!</button>
+
+	<footer>
+		Use this UI with <code>project-python/remote-led/remote-led.py</code>.
+	</footer>
+
+	<!-- including the latest PubNub JavaScript SDK -->
+	<script src="http://cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
+	<script>
+(function() {
+	// DOM
+	var button = document.querySelector('button'); 
+	// This is the channel name you are subscribing in remote-led.py
+	var channel = 'thechannel';
+	// Init - Get your own keys at admin.pubnub.com
+	var p = PUBNUB.init({
+		subscribe_key: 'pub-c-50280582-5344-46f2-aa9c-7a1b77ce366a',
+		publish_key:   'sub-c-a0a42f54-2895-11e6-be83-0619f8945a4f'
+	});
+	// Sending data
+	function disco() {
+		//window.alert("Hello");
+    p.publish({
+      channel : 'thechannel', 
+      message : {led: 1}
+    });
+    console.log('message');
+  }
+
+
+  	p.subscribe({
+    channel : 'thechannel',
+    message : function(m){
+    	alert("Recieve");
+        console.log(m)
+    },
+    error : function (error) {
+        // Handle error here
+        console.log(JSON.stringify(error));
+    }
+});
+    // Click event
+	button.addEventListener('click', disco);
+})();
+	</script>
+	
+</body>
+</html>
